@@ -14,6 +14,7 @@ import view.Fenetre;
 public class main extends javax.swing.JFrame implements SerialPortEventListener  {
 	   SerialPort serialPort;
 	   public static String inputLine;
+	   public static String all;
 	   
 	   public String getInputLine(){
 			return inputLine;
@@ -22,7 +23,7 @@ public class main extends javax.swing.JFrame implements SerialPortEventListener 
 	    private static final String PORT_NAMES[] = { 
 	        "COM3", // com Arduino
 	    };
-	    private BufferedReader input;  
+	    BufferedReader input;  
 	    private OutputStream output;   // The output stream to the port 
 	    private static final int TIME_OUT = 2000; // Milliseconds to block while waiting for port open
 	    private static final int DATA_RATE = 9600;  // vitesse de défilement arduino
@@ -69,8 +70,19 @@ public class main extends javax.swing.JFrame implements SerialPortEventListener 
 	    public synchronized void serialEvent(SerialPortEvent oEvent) {
 	        if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 	            try {
-	                inputLine=input.readLine();
+	            	/*int compteur = 0;
+	            	compteur = compteur + 1;*/
+	            	all = inputLine;
+	            	inputLine=input.readLine();
 	                System.out.println(inputLine);
+	                all = all + inputLine;
+	                //System.out.println("all : "+all);
+	                Fenetre.TempWanted = Integer.parseInt(Fenetre.textField.getText());
+	    			//System.out.println(textField.getText());
+	                System.out.println(Fenetre.textField.getText());
+	                Fenetre.panneau.repaint();
+	          
+	                //System.out.println("new call");
 	                
 	            } catch (Exception e) {
 	                System.err.println(e.toString());
@@ -86,7 +98,7 @@ public class main extends javax.swing.JFrame implements SerialPortEventListener 
 	        Thread t = new Thread() {
 	            public void run() { //garde le programme actif pour 1000 seconds
 	                //récupère données console arduino et les affiches
-	                try {Thread.sleep(100000);} catch (InterruptedException ie) {}
+	                try {Thread.sleep(100000);/*System.out.println("Passage");*/} catch (InterruptedException ie) {}
 	            }
 	        };
 	        t.start();
